@@ -140,3 +140,11 @@
 - [x] Crop (drag, zoom, turn) every avatar and album picture before upload on the edit page.
 - [x] Profile cover shows the album pictures, sliding between them; falls back to the avatar when the album is empty.
 - [x] تصحيح الرفع: جميع تحديثات التطبيق على main؛ فرع لوحة-الادارة بقي دون تغيير ويخصص لتحديثات لوحة الإدارة فقط.
+
+# Store (المتجر) and backpack
+- [ ] Database: store items (frames and rides, 4 categories), buying with coins, backpack, wearing, management functions (supabase/023_store.sql) with tests.
+- [ ] App: store page (frames / rides tabs, categories, preview, purchase) and backpack page (days left, wear / take off).
+- [ ] Show worn frames on profiles and room seats; ride plays when its owner enters a room.
+- [ ] Management panel (branch لوحة-الادارة): store page to add/edit/hide/delete items, upload pictures and videos, give an item to a member.
+- [ ] Push app to main and panel to لوحة-الادارة on GitHub.
+- [ ] Run supabase/023_store.sql in the SQL Editor (needs the user).
