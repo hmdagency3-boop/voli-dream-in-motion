@@ -442,7 +442,9 @@ function RoomPage() {
                     {p ? (
                       <span className="relative">
                         {voice.speaking.has(p.auth_id) && <><span aria-hidden className="voice-ripple" /><span aria-hidden className="voice-ripple voice-ripple-late" /></>}
-                        <Avatar person={p} className={`relative size-14 ring-2 transition ${voice.speaking.has(p.auth_id) ? "ring-primary shadow-[0_0_12px_var(--color-primary)]" : sitter?.auth_id === me ? "ring-primary" : "ring-on-media/30"}`} />
+                        <HeadwearFrame art={worn[p.auth_id]?.headwear?.art_url}>
+                          <Avatar person={p} className={`relative size-14 ring-2 transition ${voice.speaking.has(p.auth_id) ? "ring-primary shadow-[0_0_12px_var(--color-primary)]" : sitter?.auth_id === me ? "ring-primary" : "ring-on-media/30"}`} />
+                        </HeadwearFrame>
                         {(sitter?.auth_id === me && voice.muted) || tools.controls.some(c=>c.seat_no===no&&c.muted) && (
                           <span className="absolute -bottom-0.5 -end-0.5 grid size-5 place-items-center rounded-full bg-destructive text-destructive-foreground"><MicOff className="size-3" /></span>
                         )}
@@ -603,6 +605,11 @@ function RoomPage() {
               <GiftVideo key={shownVideo.id} show={shownVideo}
                 sender={shownVideo.sender_id ? (shownVideo.sender_id === me ? profile?.display_name : people[shownVideo.sender_id]?.display_name) ?? undefined : undefined}
                 onDone={() => setVideoQueue((q) => q.filter((x) => x.id !== shownVideo.id))} />
+            )}
+
+            {shownRide && !shownVideo && (
+              <RideEntrance key={shownRide.key} ride={shownRide.ride} name={shownRide.name}
+                onDone={() => setRides((q) => q.filter((x) => x.key !== shownRide.key))} />
             )}
 
             {shownEntrance && (() => {
