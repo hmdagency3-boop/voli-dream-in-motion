@@ -282,10 +282,10 @@ create or replace function public.admin_give_store_item(p_public_id integer, p_i
 language plpgsql security definer set search_path = '' as $$
 declare me uuid := public.admin_guard(); who uuid; d integer; ends timestamptz;
 begin
-  select id_, coalesce(p_days, s.duration_days) into who, d
-    from (select auth_id as id_ from public.profiles where public_id = p_public_id) p, public.store_items s where s.id = p_item;
+  select auth_id into who from public.profiles where public_id = p_public_id;
+  if who is null then raise exception 'No such member' using errcode = 'P0001', hint = 'no_member'; end if;
+  select coalesce(p_days, s.duration_days) into d from public.store_items s where s.id = p_item;
   if d is null then raise exception 'No such item' using errcode = 'P0001', hint = 'not_found'; end if;
-  if who is null then raise exception 'No such member' using errcode = 'P0001', hint = 'not_found'; end if;
   if d not between 1 and 3650 then raise exception 'Bad days' using errcode = 'P0001', hint = 'bad_days'; end if;
   ends := public.store_add_days(who, p_item, d);
   insert into public.store_purchases(auth_id, item_id, price, days, source) values (who, p_item, 0, d, 'admin');
