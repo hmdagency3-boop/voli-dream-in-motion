@@ -204,7 +204,7 @@ create or replace function public.admin_create_store_item(p_kind text, p_categor
 language plpgsql security definer set search_path = '' as $$
 declare me uuid := public.admin_guard(); v text := nullif(btrim(coalesce(p_video_url, '')), ''); new_id bigint; s integer;
 begin
-  if p_kind is null or p_kind not in ('headwear', 'ride') then raise exception 'Bad kind' using errcode = 'P0001', hint = 'bad_kind'; end if;
+  if p_kind is null or p_kind not in ('headwear', 'ride') then raise exception 'Bad kind' using errcode = 'P0001', hint = 'bad_item_kind'; end if;
   perform public.store_check(p_category, p_name, p_price, p_days);
   if not public.store_media_ok(p_art_url, 'image') then raise exception 'Bad picture' using errcode = 'P0001', hint = 'bad_art'; end if;
   if v is not null and not public.store_media_ok(v, 'video') then raise exception 'Bad video' using errcode = 'P0001', hint = 'bad_video'; end if;

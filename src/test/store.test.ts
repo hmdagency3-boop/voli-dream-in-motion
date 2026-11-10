@@ -50,7 +50,7 @@ describe('store', () => {
     expect(await hintOf(one(db, BUYER, "select public.admin_create_store_item('headwear', 'simple', 'x', 10, 7, null, $1) as r", [ART]))).toBe('not_admin');
     expect(await hintOf(create(db, 'headwear', 'x', 10, 7, 'https://evil.example.com/x.png'))).toBe('bad_art');
     expect(await hintOf(create(db, 'ride', 'x', 10, 7, ART, 'https://evil.example.com/x.mp4'))).toBe('bad_video');
-    expect(await hintOf(create(db, 'hat', 'x', 10, 7))).toBe('bad_kind');
+    expect(await hintOf(create(db, 'hat', 'x', 10, 7))).toBe('bad_item_kind');
     expect(await hintOf(create(db, 'headwear', 'x', 0, 7))).toBe('bad_price');
     ghost = await create(db, 'headwear', 'Ghost Cemetery', 15999, 7);
     goose = await create(db, 'headwear', 'Cool Goose', 20000, 30, ART2);
