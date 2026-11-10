@@ -8,7 +8,7 @@ import { supabase } from "@/lib/supabase";
 import {
   LogOut, Copy,
   Settings, ChevronLeft, Crown, Wallet, Gift, User,
-  Shield, Headphones, Video, QrCode, TrendingUp, Users,
+  Shield, Headphones, Video, QrCode, TrendingUp, Users, ShoppingBag,
 } from "lucide-react";
 import { AppScreen } from "@/components/AppScreen";
 import { Button } from "@/components/ui/button";
@@ -22,6 +22,8 @@ import { SpecialIdBadge } from "@/components/SpecialIdBadge";
 import { shownId } from "@/lib/special-id";
 import { activeVipLevel } from "@/lib/vip";
 import { VipBadge, VipFrame } from "@/components/VipBadge";
+import { HeadwearFrame } from "@/components/HeadwearFrame";
+import { useWorn } from "@/lib/store";
 
 function useThresholds() {
   const [data, setData] = useState<Record<LevelKind, Threshold[]>>({ charisma: [], wealth: [] });
@@ -108,6 +110,8 @@ function MePage() {
   const { session, profile, ready } = useAccount();
   const navigate = useNavigate();
   const thresholds = useThresholds();
+  const myId = session?.user.id;
+  const frame = useWorn([myId])[myId ?? ""]?.headwear?.art_url;
   return (
     <AppScreen background={meBackground}>
         {/* ── الغلاف ── */}
@@ -131,11 +135,13 @@ function MePage() {
         >
           {session && <ChevronLeft className="absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />}
           <div className="flex items-start gap-4">
-            <VipFrame level={activeVipLevel(profile)}>
-              <span className="grid size-20 shrink-0 place-items-center overflow-hidden rounded-full bg-secondary text-muted-foreground">
-                <MeAvatar url={profile?.avatar_url ?? null} />
-              </span>
-            </VipFrame>
+            <HeadwearFrame art={frame}>
+              <VipFrame level={activeVipLevel(profile)}>
+                <span className="grid size-20 shrink-0 place-items-center overflow-hidden rounded-full bg-secondary text-muted-foreground">
+                  <MeAvatar url={profile?.avatar_url ?? null} />
+                </span>
+              </VipFrame>
+            </HeadwearFrame>
             <div className="min-w-0 flex-1 pt-1">
               {session ? (
                 <>
@@ -216,6 +222,16 @@ function MePage() {
             <span title={Number(profile?.coins ?? 0).toLocaleString("en")} className="ms-auto min-w-0 truncate font-sans text-sm font-semibold tabular-nums">{new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 }).format(Number(profile?.coins ?? 0))}</span>
           </div>
         </section>
+
+        {/* ── المتجر ── */}
+        <Link to="/store" className="mx-4 mt-3 flex items-center gap-3 rounded-[1.5rem] border bg-card px-4 py-3.5 transition hover:bg-secondary">
+          <span className="grid size-9 place-items-center rounded-xl bg-accent/15">
+            <ShoppingBag className="size-[18px] text-accent-foreground" />
+          </span>
+          <span className="flex-1 text-sm font-semibold">المتجر</span>
+          <span className="text-xs text-muted-foreground">إطارات ومركبات</span>
+          <ChevronLeft className="size-4 text-muted-foreground" />
+        </Link>
 
         {/* ── وكالتي ── */}
         <Link to="/agency" className="mx-4 mt-3 flex items-center gap-3 rounded-[1.5rem] border bg-card px-4 py-3.5 transition hover:bg-secondary">

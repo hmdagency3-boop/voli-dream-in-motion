@@ -13,6 +13,8 @@ import { badgeTier, charismaBadge, wealthBadge } from "@/lib/badges";
 import { shownId } from "@/lib/special-id";
 import { activeVipLevel } from "@/lib/vip";
 import { VipBadge, VipFrame } from "@/components/VipBadge";
+import { HeadwearFrame } from "@/components/HeadwearFrame";
+import { useWorn } from "@/lib/store";
 import { ProfileCover, ProfileIdTags, useProfileInfo } from "@/components/ProfileInfo";
 
 const tabs = ["هدية", "اطار", "مركبة", "شارة"] as const;
@@ -61,6 +63,7 @@ export function ProfileDetails({ profile, userId, ready, signedIn, isSelf, back 
   const counts = useCounts(userId);
   const thresholds = useThresholds();
   const bio = useBio(userId);
+  const frame = useWorn([userId])[userId ?? ""]?.headwear?.art_url;
   const [tab, setTab] = useState<(typeof tabs)[number]>("هدية");
   const name = profile?.display_name ?? (session?.user.user_metadata?.["display_name"] as string | undefined) ?? (isSelf ? "حسابي" : "مستخدم");
   const wl = levelProgress(Number(profile?.wealth_points ?? 0), thresholds.wealth).level;
@@ -88,11 +91,13 @@ export function ProfileDetails({ profile, userId, ready, signedIn, isSelf, back 
         </div>
 
         <div className="absolute inset-x-0 bottom-3 flex items-end gap-3 px-5">
-          <VipFrame level={vipLevel}>
-            <span className="grid size-24 shrink-0 place-items-center overflow-hidden rounded-full border-4 border-background bg-secondary text-muted-foreground">
-              {profile?.avatar_url ? <img src={profile.avatar_url} alt="" className="size-full object-cover" /> : <User className="size-10" />}
-            </span>
-          </VipFrame>
+          <HeadwearFrame art={frame}>
+            <VipFrame level={vipLevel}>
+              <span className="grid size-24 shrink-0 place-items-center overflow-hidden rounded-full border-4 border-background bg-secondary text-muted-foreground">
+                {profile?.avatar_url ? <img src={profile.avatar_url} alt="" className="size-full object-cover" /> : <User className="size-10" />}
+              </span>
+            </VipFrame>
+          </HeadwearFrame>
           <div className="min-w-0 flex-1 pb-1">
             <h1 className="truncate font-display text-2xl font-extrabold">{session && (profile || isSelf) ? name : ready ? (isSelf ? "لم يتم تسجيل الدخول" : "المستخدم غير موجود") : "…"}</h1>
             {profile && (
