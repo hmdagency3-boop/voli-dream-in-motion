@@ -20,6 +20,9 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { VipProfileCard } from "@/components/VipProfileCard";
 import { VipBadge } from "@/components/VipBadge";
 import { VipEntrance } from "@/components/VipEntrance";
+import { HeadwearFrame } from "@/components/HeadwearFrame";
+import { RideEntrance } from "@/components/RideEntrance";
+import { getWorn, useWorn, type WornItem } from "@/lib/store";
 import { useAccount } from "@/hooks/use-account";
 import { useRoomVoice } from "@/hooks/use-room-voice";
 import { activeVipLevel, vipTier } from "@/lib/vip";
@@ -78,6 +81,8 @@ function RoomPage() {
   const [entrance, setEntrance] = useState(false);
   const [joins, setJoins] = useState<Join[]>([]);
   const [entrances, setEntrances] = useState<Join[]>([]);
+  /** Store rides of members who just came in, shown one after another. */
+  const [rides, setRides] = useState<{ key: string; name: string; ride: WornItem }[]>([]);
   const [listOpen, setListOpen] = useState(false);
   const [rankOpen, setRankOpen] = useState(false);
   const [gamesOpen, setGamesOpen] = useState(false);
@@ -188,6 +193,11 @@ function RoomPage() {
         if (fresh.length) {
           setJoins((j) => [...j, ...fresh].slice(-50));
           setEntrances((q) => [...q, ...fresh.filter((x) => activeVipLevel(peopleRef.current[x.auth_id]) > 0)]);
+          void getWorn(fresh.map((x) => x.auth_id)).then((w) => {
+            if (!active) return;
+            const add = fresh.flatMap((x) => { const ride = w[x.auth_id]?.ride; return ride ? [{ key: x.key, name: peopleRef.current[x.auth_id]?.display_name ?? "", ride }] : []; });
+            if (add.length) setRides((q) => [...q, ...add].slice(-10));
+          });
         }
       }
       // Removed by the owner or a moderator.
@@ -241,7 +251,12 @@ function RoomPage() {
     const j = { key: `${me}-${Date.now()}`, auth_id: me, at: new Date().toISOString() };
     setJoins((x) => [...x, j]);
     if (activeVipLevel(profile) > 0) setEntrances((q) => [j, ...q]);
+    const myName = profile?.display_name ?? "";
+    void getWorn([me]).then((w) => { const ride = w[me]?.ride; if (ride) setRides((q) => [{ key: j.key, name: myName, ride }, ...q]); });
   }, [entrance, me, profile]);
+  const shownRide = rides[0];
+  // Frames worn by the people on the mics.
+  const worn = useWorn(seats.map((x) => x.auth_id));
   // Entrance bars play one after another.
   const shownEntrance = entrances[0];
   useEffect(() => {
