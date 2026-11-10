@@ -55,7 +55,7 @@ export function ItemTile({ art, name, selected, onSelect, onPlay, badge, footer 
           </button>
         )}
       </div>
-      <p className="mt-1.5 truncate text-center text-sm font-semibold">{name}</p>
+      <p dir="auto" className="mt-1.5 truncate text-center text-sm font-semibold">{name}</p>
       <div className="mt-0.5 flex items-center justify-center gap-1 text-sm font-bold tabular-nums">{footer}</div>
     </div>
   );
