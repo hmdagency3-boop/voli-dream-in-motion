@@ -88,11 +88,13 @@ export function ProfileDetails({ profile, userId, ready, signedIn, isSelf, back 
         </div>
 
         <div className="absolute inset-x-0 bottom-3 flex items-end gap-3 px-5">
-          <VipFrame level={vipLevel}>
-            <span className="grid size-24 shrink-0 place-items-center overflow-hidden rounded-full border-4 border-background bg-secondary text-muted-foreground">
-              {profile?.avatar_url ? <img src={profile.avatar_url} alt="" className="size-full object-cover" /> : <User className="size-10" />}
-            </span>
-          </VipFrame>
+          <HeadwearFrame art={frame}>
+            <VipFrame level={vipLevel}>
+              <span className="grid size-24 shrink-0 place-items-center overflow-hidden rounded-full border-4 border-background bg-secondary text-muted-foreground">
+                {profile?.avatar_url ? <img src={profile.avatar_url} alt="" className="size-full object-cover" /> : <User className="size-10" />}
+              </span>
+            </VipFrame>
+          </HeadwearFrame>
           <div className="min-w-0 flex-1 pb-1">
             <h1 className="truncate font-display text-2xl font-extrabold">{session && (profile || isSelf) ? name : ready ? (isSelf ? "لم يتم تسجيل الدخول" : "المستخدم غير موجود") : "…"}</h1>
             {profile && (

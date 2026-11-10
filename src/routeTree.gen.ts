@@ -10,12 +10,14 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BackpackRouteImport } from './routes/backpack'
 import { Route as ChatRouteImport } from './routes/chat'
 import { Route as LevelsRouteImport } from './routes/levels'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as MeRouteImport } from './routes/me'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as StoreRouteImport } from './routes/store'
 import { Route as VipRouteImport } from './routes/vip'
 import { Route as AgencyIndexRouteImport } from './routes/agency.index'
 import { Route as AgencyApplyRouteImport } from './routes/agency.apply'
@@ -33,6 +35,11 @@ import { Route as UserPublicIdRouteImport } from './routes/user.$publicId'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BackpackRoute = BackpackRouteImport.update({
+  id: '/backpack',
+  path: '/backpack',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ChatRoute = ChatRouteImport.update({
@@ -63,6 +70,11 @@ const SearchRoute = SearchRouteImport.update({
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StoreRoute = StoreRouteImport.update({
+  id: '/store',
+  path: '/store',
   getParentRoute: () => rootRouteImport,
 } as any)
 const VipRoute = VipRouteImport.update({
@@ -133,12 +145,14 @@ const UserPublicIdRoute = UserPublicIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/backpack': typeof BackpackRoute
   '/chat': typeof ChatRoute
   '/levels': typeof LevelsRoute
   '/login': typeof LoginRoute
   '/me': typeof MeRoute
   '/search': typeof SearchRoute
   '/signup': typeof SignupRoute
+  '/store': typeof StoreRoute
   '/vip': typeof VipRoute
   '/agency/apply': typeof AgencyApplyRoute
   '/agency/income': typeof AgencyIncomeRoute
@@ -155,12 +169,14 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/backpack': typeof BackpackRoute
   '/chat': typeof ChatRoute
   '/levels': typeof LevelsRoute
   '/login': typeof LoginRoute
   '/me': typeof MeRoute
   '/search': typeof SearchRoute
   '/signup': typeof SignupRoute
+  '/store': typeof StoreRoute
   '/vip': typeof VipRoute
   '/agency/apply': typeof AgencyApplyRoute
   '/agency/income': typeof AgencyIncomeRoute
@@ -178,12 +194,14 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/backpack': typeof BackpackRoute
   '/chat': typeof ChatRoute
   '/levels': typeof LevelsRoute
   '/login': typeof LoginRoute
   '/me': typeof MeRoute
   '/search': typeof SearchRoute
   '/signup': typeof SignupRoute
+  '/store': typeof StoreRoute
   '/vip': typeof VipRoute
   '/agency/apply': typeof AgencyApplyRoute
   '/agency/income': typeof AgencyIncomeRoute
@@ -202,12 +220,14 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/backpack'
     | '/chat'
     | '/levels'
     | '/login'
     | '/me'
     | '/search'
     | '/signup'
+    | '/store'
     | '/vip'
     | '/agency/apply'
     | '/agency/income'
@@ -224,12 +244,14 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/backpack'
     | '/chat'
     | '/levels'
     | '/login'
     | '/me'
     | '/search'
     | '/signup'
+    | '/store'
     | '/vip'
     | '/agency/apply'
     | '/agency/income'
@@ -246,12 +268,14 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/backpack'
     | '/chat'
     | '/levels'
     | '/login'
     | '/me'
     | '/search'
     | '/signup'
+    | '/store'
     | '/vip'
     | '/agency/apply'
     | '/agency/income'
@@ -269,12 +293,14 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BackpackRoute: typeof BackpackRoute
   ChatRoute: typeof ChatRoute
   LevelsRoute: typeof LevelsRoute
   LoginRoute: typeof LoginRoute
   MeRoute: typeof MeRoute
   SearchRoute: typeof SearchRoute
   SignupRoute: typeof SignupRoute
+  StoreRoute: typeof StoreRoute
   VipRoute: typeof VipRoute
   AgencyApplyRoute: typeof AgencyApplyRoute
   AgencyIncomeRoute: typeof AgencyIncomeRoute
@@ -297,6 +323,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/backpack': {
+      id: '/backpack'
+      path: '/backpack'
+      fullPath: '/backpack'
+      preLoaderRoute: typeof BackpackRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/chat': {
@@ -339,6 +372,13 @@ declare module '@tanstack/react-router' {
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/store': {
+      id: '/store'
+      path: '/store'
+      fullPath: '/store'
+      preLoaderRoute: typeof StoreRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/vip': {
@@ -437,12 +477,14 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BackpackRoute: BackpackRoute,
   ChatRoute: ChatRoute,
   LevelsRoute: LevelsRoute,
   LoginRoute: LoginRoute,
   MeRoute: MeRoute,
   SearchRoute: SearchRoute,
   SignupRoute: SignupRoute,
+  StoreRoute: StoreRoute,
   VipRoute: VipRoute,
   AgencyApplyRoute: AgencyApplyRoute,
   AgencyIncomeRoute: AgencyIncomeRoute,
