@@ -1,0 +1,1 @@
+- Country flags are flag-icons' 1x1 SVGs bundled via import.meta.glob in profile-info.ts (emoji only as fallback), so they render round everywhere without a CDN.

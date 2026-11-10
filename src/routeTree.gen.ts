@@ -10,33 +10,284 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ChatRouteImport } from './routes/chat'
+import { Route as LevelsRouteImport } from './routes/levels'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as MeRouteImport } from './routes/me'
+import { Route as SearchRouteImport } from './routes/search'
+import { Route as SignupRouteImport } from './routes/signup'
+import { Route as VipRouteImport } from './routes/vip'
+import { Route as AgencyIndexRouteImport } from './routes/agency.index'
+import { Route as AgencyApplyRouteImport } from './routes/agency.apply'
+import { Route as AgencyIncomeRouteImport } from './routes/agency.income'
+import { Route as AgencyMembersRouteImport } from './routes/agency.members'
+import { Route as AgencyMyIncomeRouteImport } from './routes/agency.my-income'
+import { Route as AgencyRequestsRouteImport } from './routes/agency.requests'
+import { Route as ChatPublicIdRouteImport } from './routes/chat_.$publicId'
+import { Route as MeDetailsRouteImport } from './routes/me_.details'
+import { Route as MeEditRouteImport } from './routes/me_.edit'
+import { Route as RoomPublicIdRouteImport } from './routes/room.$publicId'
+import { Route as RoomNewRouteImport } from './routes/room.new'
+import { Route as UserPublicIdRouteImport } from './routes/user.$publicId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ChatRoute = ChatRouteImport.update({
+  id: '/chat',
+  path: '/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LevelsRoute = LevelsRouteImport.update({
+  id: '/levels',
+  path: '/levels',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MeRoute = MeRouteImport.update({
+  id: '/me',
+  path: '/me',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VipRoute = VipRouteImport.update({
+  id: '/vip',
+  path: '/vip',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AgencyIndexRoute = AgencyIndexRouteImport.update({
+  id: '/agency/',
+  path: '/agency/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AgencyApplyRoute = AgencyApplyRouteImport.update({
+  id: '/agency/apply',
+  path: '/agency/apply',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AgencyIncomeRoute = AgencyIncomeRouteImport.update({
+  id: '/agency/income',
+  path: '/agency/income',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AgencyMembersRoute = AgencyMembersRouteImport.update({
+  id: '/agency/members',
+  path: '/agency/members',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AgencyMyIncomeRoute = AgencyMyIncomeRouteImport.update({
+  id: '/agency/my-income',
+  path: '/agency/my-income',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AgencyRequestsRoute = AgencyRequestsRouteImport.update({
+  id: '/agency/requests',
+  path: '/agency/requests',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChatPublicIdRoute = ChatPublicIdRouteImport.update({
+  id: '/chat_/$publicId',
+  path: '/chat/$publicId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MeDetailsRoute = MeDetailsRouteImport.update({
+  id: '/me_/details',
+  path: '/me/details',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MeEditRoute = MeEditRouteImport.update({
+  id: '/me_/edit',
+  path: '/me/edit',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RoomPublicIdRoute = RoomPublicIdRouteImport.update({
+  id: '/room/$publicId',
+  path: '/room/$publicId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RoomNewRoute = RoomNewRouteImport.update({
+  id: '/room/new',
+  path: '/room/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UserPublicIdRoute = UserPublicIdRouteImport.update({
+  id: '/user/$publicId',
+  path: '/user/$publicId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/chat': typeof ChatRoute
+  '/levels': typeof LevelsRoute
+  '/login': typeof LoginRoute
+  '/me': typeof MeRoute
+  '/search': typeof SearchRoute
+  '/signup': typeof SignupRoute
+  '/vip': typeof VipRoute
+  '/agency/apply': typeof AgencyApplyRoute
+  '/agency/income': typeof AgencyIncomeRoute
+  '/agency/members': typeof AgencyMembersRoute
+  '/agency/my-income': typeof AgencyMyIncomeRoute
+  '/agency/requests': typeof AgencyRequestsRoute
+  '/chat/$publicId': typeof ChatPublicIdRoute
+  '/me/details': typeof MeDetailsRoute
+  '/me/edit': typeof MeEditRoute
+  '/room/$publicId': typeof RoomPublicIdRoute
+  '/room/new': typeof RoomNewRoute
+  '/user/$publicId': typeof UserPublicIdRoute
+  '/agency/': typeof AgencyIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/chat': typeof ChatRoute
+  '/levels': typeof LevelsRoute
+  '/login': typeof LoginRoute
+  '/me': typeof MeRoute
+  '/search': typeof SearchRoute
+  '/signup': typeof SignupRoute
+  '/vip': typeof VipRoute
+  '/agency/apply': typeof AgencyApplyRoute
+  '/agency/income': typeof AgencyIncomeRoute
+  '/agency/members': typeof AgencyMembersRoute
+  '/agency/my-income': typeof AgencyMyIncomeRoute
+  '/agency/requests': typeof AgencyRequestsRoute
+  '/chat/$publicId': typeof ChatPublicIdRoute
+  '/me/details': typeof MeDetailsRoute
+  '/me/edit': typeof MeEditRoute
+  '/room/$publicId': typeof RoomPublicIdRoute
+  '/room/new': typeof RoomNewRoute
+  '/user/$publicId': typeof UserPublicIdRoute
+  '/agency': typeof AgencyIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/chat': typeof ChatRoute
+  '/levels': typeof LevelsRoute
+  '/login': typeof LoginRoute
+  '/me': typeof MeRoute
+  '/search': typeof SearchRoute
+  '/signup': typeof SignupRoute
+  '/vip': typeof VipRoute
+  '/agency/apply': typeof AgencyApplyRoute
+  '/agency/income': typeof AgencyIncomeRoute
+  '/agency/members': typeof AgencyMembersRoute
+  '/agency/my-income': typeof AgencyMyIncomeRoute
+  '/agency/requests': typeof AgencyRequestsRoute
+  '/chat_/$publicId': typeof ChatPublicIdRoute
+  '/me_/details': typeof MeDetailsRoute
+  '/me_/edit': typeof MeEditRoute
+  '/room/$publicId': typeof RoomPublicIdRoute
+  '/room/new': typeof RoomNewRoute
+  '/user/$publicId': typeof UserPublicIdRoute
+  '/agency/': typeof AgencyIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/chat'
+    | '/levels'
+    | '/login'
+    | '/me'
+    | '/search'
+    | '/signup'
+    | '/vip'
+    | '/agency/apply'
+    | '/agency/income'
+    | '/agency/members'
+    | '/agency/my-income'
+    | '/agency/requests'
+    | '/chat/$publicId'
+    | '/me/details'
+    | '/me/edit'
+    | '/room/$publicId'
+    | '/room/new'
+    | '/user/$publicId'
+    | '/agency/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/chat'
+    | '/levels'
+    | '/login'
+    | '/me'
+    | '/search'
+    | '/signup'
+    | '/vip'
+    | '/agency/apply'
+    | '/agency/income'
+    | '/agency/members'
+    | '/agency/my-income'
+    | '/agency/requests'
+    | '/chat/$publicId'
+    | '/me/details'
+    | '/me/edit'
+    | '/room/$publicId'
+    | '/room/new'
+    | '/user/$publicId'
+    | '/agency'
+  id:
+    | '__root__'
+    | '/'
+    | '/chat'
+    | '/levels'
+    | '/login'
+    | '/me'
+    | '/search'
+    | '/signup'
+    | '/vip'
+    | '/agency/apply'
+    | '/agency/income'
+    | '/agency/members'
+    | '/agency/my-income'
+    | '/agency/requests'
+    | '/chat_/$publicId'
+    | '/me_/details'
+    | '/me_/edit'
+    | '/room/$publicId'
+    | '/room/new'
+    | '/user/$publicId'
+    | '/agency/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ChatRoute: typeof ChatRoute
+  LevelsRoute: typeof LevelsRoute
+  LoginRoute: typeof LoginRoute
+  MeRoute: typeof MeRoute
+  SearchRoute: typeof SearchRoute
+  SignupRoute: typeof SignupRoute
+  VipRoute: typeof VipRoute
+  AgencyApplyRoute: typeof AgencyApplyRoute
+  AgencyIncomeRoute: typeof AgencyIncomeRoute
+  AgencyMembersRoute: typeof AgencyMembersRoute
+  AgencyMyIncomeRoute: typeof AgencyMyIncomeRoute
+  AgencyRequestsRoute: typeof AgencyRequestsRoute
+  ChatPublicIdRoute: typeof ChatPublicIdRoute
+  MeDetailsRoute: typeof MeDetailsRoute
+  MeEditRoute: typeof MeEditRoute
+  RoomPublicIdRoute: typeof RoomPublicIdRoute
+  RoomNewRoute: typeof RoomNewRoute
+  UserPublicIdRoute: typeof UserPublicIdRoute
+  AgencyIndexRoute: typeof AgencyIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +299,163 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/chat': {
+      id: '/chat'
+      path: '/chat'
+      fullPath: '/chat'
+      preLoaderRoute: typeof ChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/levels': {
+      id: '/levels'
+      path: '/levels'
+      fullPath: '/levels'
+      preLoaderRoute: typeof LevelsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/me': {
+      id: '/me'
+      path: '/me'
+      fullPath: '/me'
+      preLoaderRoute: typeof MeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vip': {
+      id: '/vip'
+      path: '/vip'
+      fullPath: '/vip'
+      preLoaderRoute: typeof VipRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/agency/': {
+      id: '/agency/'
+      path: '/agency'
+      fullPath: '/agency/'
+      preLoaderRoute: typeof AgencyIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/agency/apply': {
+      id: '/agency/apply'
+      path: '/agency/apply'
+      fullPath: '/agency/apply'
+      preLoaderRoute: typeof AgencyApplyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/agency/income': {
+      id: '/agency/income'
+      path: '/agency/income'
+      fullPath: '/agency/income'
+      preLoaderRoute: typeof AgencyIncomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/agency/members': {
+      id: '/agency/members'
+      path: '/agency/members'
+      fullPath: '/agency/members'
+      preLoaderRoute: typeof AgencyMembersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/agency/my-income': {
+      id: '/agency/my-income'
+      path: '/agency/my-income'
+      fullPath: '/agency/my-income'
+      preLoaderRoute: typeof AgencyMyIncomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/agency/requests': {
+      id: '/agency/requests'
+      path: '/agency/requests'
+      fullPath: '/agency/requests'
+      preLoaderRoute: typeof AgencyRequestsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/chat_/$publicId': {
+      id: '/chat_/$publicId'
+      path: '/chat/$publicId'
+      fullPath: '/chat/$publicId'
+      preLoaderRoute: typeof ChatPublicIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/me_/details': {
+      id: '/me_/details'
+      path: '/me/details'
+      fullPath: '/me/details'
+      preLoaderRoute: typeof MeDetailsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/me_/edit': {
+      id: '/me_/edit'
+      path: '/me/edit'
+      fullPath: '/me/edit'
+      preLoaderRoute: typeof MeEditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/room/$publicId': {
+      id: '/room/$publicId'
+      path: '/room/$publicId'
+      fullPath: '/room/$publicId'
+      preLoaderRoute: typeof RoomPublicIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/room/new': {
+      id: '/room/new'
+      path: '/room/new'
+      fullPath: '/room/new'
+      preLoaderRoute: typeof RoomNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/user/$publicId': {
+      id: '/user/$publicId'
+      path: '/user/$publicId'
+      fullPath: '/user/$publicId'
+      preLoaderRoute: typeof UserPublicIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ChatRoute: ChatRoute,
+  LevelsRoute: LevelsRoute,
+  LoginRoute: LoginRoute,
+  MeRoute: MeRoute,
+  SearchRoute: SearchRoute,
+  SignupRoute: SignupRoute,
+  VipRoute: VipRoute,
+  AgencyApplyRoute: AgencyApplyRoute,
+  AgencyIncomeRoute: AgencyIncomeRoute,
+  AgencyMembersRoute: AgencyMembersRoute,
+  AgencyMyIncomeRoute: AgencyMyIncomeRoute,
+  AgencyRequestsRoute: AgencyRequestsRoute,
+  ChatPublicIdRoute: ChatPublicIdRoute,
+  MeDetailsRoute: MeDetailsRoute,
+  MeEditRoute: MeEditRoute,
+  RoomPublicIdRoute: RoomPublicIdRoute,
+  RoomNewRoute: RoomNewRoute,
+  UserPublicIdRoute: UserPublicIdRoute,
+  AgencyIndexRoute: AgencyIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
