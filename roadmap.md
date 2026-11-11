@@ -144,8 +144,8 @@
 # Store (المتجر) and backpack
 - [x] Database: store items (frames and rides, 4 categories), buying with coins, backpack, wearing, management functions (supabase/023_store.sql) with tests.
 - [x] App: store page (frames / rides tabs, categories, preview, purchase) and backpack page (days left, wear / take off).
-- [ ] Show worn frames on profiles and room seats; ride plays when its owner enters a room.
+- [x] Show worn frames on profiles and room seats; ride plays when its owner enters a room.
 - [x] Management panel (already built in the separate Voli Admin Dashboard project): store page to add/edit/hide/delete items, upload pictures and videos, give an item to a member.
-- [ ] Push app to main and panel to لوحة-الادارة on GitHub.
+- [ ] Push app to main on GitHub (waits on the GitHub connection).
 - [ ] Run supabase/023_store.sql in the SQL Editor (needs the user).
 - [x] Match the app's store and backpack to the panel's own sql/023_store.sql (frame/ride kinds, style, days, UUID ids, store_buy / store_equip).
