@@ -442,7 +442,7 @@ function RoomPage() {
                     {p ? (
                       <span className="relative">
                         {voice.speaking.has(p.auth_id) && <><span aria-hidden className="voice-ripple" /><span aria-hidden className="voice-ripple voice-ripple-late" /></>}
-                        <HeadwearFrame art={worn[p.auth_id]?.headwear?.art_url}>
+                        <HeadwearFrame art={worn[p.auth_id]?.frame?.art_url}>
                           <Avatar person={p} className={`relative size-14 ring-2 transition ${voice.speaking.has(p.auth_id) ? "ring-primary shadow-[0_0_12px_var(--color-primary)]" : sitter?.auth_id === me ? "ring-primary" : "ring-on-media/30"}`} />
                         </HeadwearFrame>
                         {(sitter?.auth_id === me && voice.muted) || tools.controls.some(c=>c.seat_no===no&&c.muted) && (

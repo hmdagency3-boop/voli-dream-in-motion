@@ -26,8 +26,8 @@ function BackpackPage() {
   const { session, profile } = useAccount();
   const [items, setItems] = useState<BackpackItem[] | null>(null);
   const [problem, setProblem] = useState<string | null>(null);
-  const [kind, setKind] = useState<StoreKind>("headwear");
-  const [picked, setPicked] = useState<Partial<Record<StoreKind, number>>>({});
+  const [kind, setKind] = useState<StoreKind>("frame");
+  const [picked, setPicked] = useState<Partial<Record<StoreKind, string>>>({});
   const [busy, setBusy] = useState(false);
   const [video, setVideo] = useState<BackpackItem | null>(null);
 
@@ -39,7 +39,7 @@ function BackpackPage() {
 
   const shelf = useMemo(() => (items ?? []).filter((i) => i.kind === kind), [items, kind]);
   const selected = shelf.find((i) => i.id === picked[kind]) ?? shelf.find((i) => i.equipped) ?? shelf[0] ?? null;
-  const wornFrame = (items ?? []).find((i) => i.kind === "headwear" && i.equipped);
+  const wornFrame = (items ?? []).find((i) => i.kind === "frame" && i.equipped);
 
   async function toggle() {
     if (!selected) return;
@@ -52,7 +52,7 @@ function BackpackPage() {
     finally { setBusy(false); }
   }
 
-  const label = !selected ? "" : kind === "headwear" ? (selected.equipped ? "شيل الإطار" : "البس الإطار") : (selected.equipped ? "وقّف المركبة" : "استخدم المركبة");
+  const label = !selected ? "" : kind === "frame" ? (selected.equipped ? "شيل الإطار" : "البس الإطار") : (selected.equipped ? "وقّف المركبة" : "استخدم المركبة");
   const footer = selected ? (
     <div className="border-t bg-card px-4 py-3">
       <Button onClick={toggle} disabled={busy} variant={selected.equipped ? "secondary" : "default"} className="h-12 w-full rounded-full text-base font-bold">
@@ -72,7 +72,7 @@ function BackpackPage() {
           <span />
         </div>
         <div className="mt-5"><KindTabs value={kind} onChange={setKind} /></div>
-        {kind === "headwear" ? (
+        {kind === "frame" ? (
           <FramePreview avatar={profile?.avatar_url} art={(selected ?? wornFrame)?.art_url} name={profile?.display_name ?? ""} />
         ) : (
           <div className="grid h-44 place-items-center">
@@ -87,7 +87,7 @@ function BackpackPage() {
         <p className="px-6 py-16 text-center text-sm text-muted-foreground">{problem}</p>
       ) : shelf.length === 0 ? (
         <div className="grid place-items-center gap-3 px-6 py-16 text-center">
-          <p className="text-sm text-muted-foreground">{kind === "headwear" ? "مفيش إطارات في حقيبتك لسه" : "مفيش مركبات في حقيبتك لسه"}</p>
+          <p className="text-sm text-muted-foreground">{kind === "frame" ? "مفيش إطارات في حقيبتك لسه" : "مفيش مركبات في حقيبتك لسه"}</p>
           <Button asChild className="rounded-full"><Link to="/store">روح للمتجر</Link></Button>
         </div>
       ) : (

@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { useAccount } from "@/hooks/use-account";
-import { buyStoreItem, getStoreItems, storeErrorMessage, storeMissing, useWorn, type StoreCategory, type StoreItem, type StoreKind } from "@/lib/store";
+import { buyStoreItem, equipItem, getStoreItems, storeErrorMessage, storeMissing, useWorn, type StoreCategory, type StoreItem, type StoreKind } from "@/lib/store";
 
 export const Route = createFileRoute("/store")({
   head: () => ({
@@ -30,9 +30,9 @@ function StorePage() {
   const { session, profile, reload } = useAccount();
   const [items, setItems] = useState<StoreItem[] | null>(null);
   const [problem, setProblem] = useState<string | null>(null);
-  const [kind, setKind] = useState<StoreKind>("headwear");
+  const [kind, setKind] = useState<StoreKind>("frame");
   const [category, setCategory] = useState<StoreCategory>("simple");
-  const [picked, setPicked] = useState<Partial<Record<StoreKind, number>>>({});
+  const [picked, setPicked] = useState<Partial<Record<StoreKind, string>>>({});
   const [confirm, setConfirm] = useState(false);
   const [buying, setBuying] = useState(false);
   const [video, setVideo] = useState<StoreItem | null>(null);
@@ -57,6 +57,8 @@ function StorePage() {
     setBuying(true);
     try {
       await buyStoreItem(selected.id);
+      // Bought items go on right away (the panel's other item of the same kind comes off).
+      await equipItem(selected.id, true).catch(() => {});
       toast.success(`مبروك! ${selected.name} بقى معاك ولبسته`);
       reload();
       setWornVersion((v) => v + 1);
@@ -93,8 +95,8 @@ function StorePage() {
           </Link>
         </div>
         <div className="mt-5"><KindTabs value={kind} onChange={setKind} /></div>
-        {kind === "headwear" ? (
-          <FramePreview avatar={profile?.avatar_url} art={selected?.art_url ?? worn?.headwear?.art_url} name={profile?.display_name ?? ""} />
+        {kind === "frame" ? (
+          <FramePreview avatar={profile?.avatar_url} art={selected?.art_url ?? worn?.frame?.art_url} name={profile?.display_name ?? ""} />
         ) : (
           <div className="relative grid h-44 place-items-center">
             {selected && <img src={selected.art_url} alt={selected.name} className="h-36 max-w-[70%] object-contain drop-shadow-2xl" />}
