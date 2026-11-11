@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { useAccount } from "@/hooks/use-account";
-import { buyStoreItem, getStoreItems, storeErrorMessage, storeMissing, useWorn, type StoreCategory, type StoreItem, type StoreKind } from "@/lib/store";
+import { buyStoreItem, equipItem, getStoreItems, storeErrorMessage, storeMissing, useWorn, type StoreCategory, type StoreItem, type StoreKind } from "@/lib/store";
 
 export const Route = createFileRoute("/store")({
   head: () => ({
@@ -57,6 +57,8 @@ function StorePage() {
     setBuying(true);
     try {
       await buyStoreItem(selected.id);
+      // Bought items go on right away (the panel's other item of the same kind comes off).
+      await equipItem(selected.id, true).catch(() => {});
       toast.success(`مبروك! ${selected.name} بقى معاك ولبسته`);
       reload();
       setWornVersion((v) => v + 1);
