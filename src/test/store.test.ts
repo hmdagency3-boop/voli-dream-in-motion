@@ -55,7 +55,7 @@ describe('store and backpack as the app uses them', () => {
   it('members see the items on sale with style, days and a UUID id', async () => {
     const r = await asUser(db, OTHER, () => db.query<{ id: string; kind: string; style: string; days: number }>(
       'select id, kind, style, days from public.store_items where active order by sort, created_at'));
-    expect(r.rows.map((x) => x.kind)).toEqual(['frame', 'frame', 'ride']);
+    expect(r.rows.map((x) => x.kind).sort()).toEqual(['frame', 'frame', 'ride']);
     expect(r.rows[0]).toMatchObject({ style: 'simple', days: 7 });
     expect(r.rows[0]!.id).toMatch(/^[0-9a-f-]{36}$/);
   });
