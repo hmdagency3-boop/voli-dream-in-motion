@@ -28,8 +28,8 @@ import { useRoomVoice } from "@/hooks/use-room-voice";
 import { activeVipLevel, vipTier } from "@/lib/vip";
 import { shownId } from "@/lib/special-id";
 import {
-  COIN_AMOUNTS, ROOM_HEARTBEAT_MS, ROOM_POLL_MS, endParty, enterRoom, getPeople, getRoomByOwnerPublicId, getRoomState, kickFromRoom,
-  leaveRoom, leaveSeat, roomTheme, roomThemeStyle, sendRoomMessage, takeSeat, throwRoomCoins,
+  ROOM_HEARTBEAT_MS, ROOM_POLL_MS, endParty, enterRoom, getPeople, getRoomByOwnerPublicId, getRoomState, kickFromRoom,
+  leaveRoom, leaveSeat, roomTheme, roomThemeStyle, sendRoomMessage, takeSeat,
   type EnterResult, type Room, type RoomMessage, type RoomPerson, type Seat,
 } from "@/lib/rooms";
 
@@ -48,7 +48,7 @@ export const Route = createFileRoute("/room/$publicId")({
 });
 
 type Status = "loading" | "missing" | "offline" | "password" | "kicked" | "inside" | "error";
-type Tab = "all" | "chat" | "gifts";
+type Tab = "all" | "chat";
 
 /** 12500 -> 12.5K: keeps the coin count inside the trophy button. */
 const shortCoins = (n: number) => (n >= 1e6 ? `${(n / 1e6).toFixed(1)}M` : n >= 1e3 ? `${(n / 1e3).toFixed(1)}K` : String(n));
@@ -86,10 +86,8 @@ function RoomPage() {
   const [listOpen, setListOpen] = useState(false);
   const [rankOpen, setRankOpen] = useState(false);
   const [gamesOpen, setGamesOpen] = useState(false);
-  /** Coins thrown in this room, and the throw the member is about to make. */
+  /** Coins thrown in this room, shown on the trophy button. */
   const [coins, setCoins] = useState(0);
-  const [amount, setAmount] = useState<number>(COIN_AMOUNTS[0]);
-  const [throwing, setThrowing] = useState(false);
   /** Gift box: open, who it opened for, what each person received here, and the gift that just flew. */
   const [giftOpen, setGiftOpen] = useState(false);
   const [giftFor, setGiftFor] = useState<string[]>([]);
@@ -328,20 +326,6 @@ function RoomPage() {
     } catch { /* closed */ }
   }
 
-  /** Coins out of my own balance into the room; the database answers with the room's new total. */
-  async function onThrow() {
-    if (!roomId || throwing || balance < amount) return;
-    setThrowing(true);
-    try {
-      setCoins(await throwRoomCoins(roomId, amount));
-      reload();
-      toast.success(`رميت ${amount} كوينز في الروم`);
-    } catch (e) {
-      const hint = (e as { hint?: string } | null)?.hint;
-      toast.error(hint === "not_enough_coins" ? "رصيدك من الكوينز مش كفاية" : hint === "not_in_room" ? "لازم تكون جوه الروم" : "مقدرتش ارمي الكوينز");
-    } finally { setThrowing(false); }
-  }
-
   function openGifts(forIds: string[] = []) {
     setGiftFor(forIds);
     setPicked(null);
@@ -475,7 +459,7 @@ function RoomPage() {
             )}
 
             <nav className="mt-4 flex gap-5 px-4" aria-label="الدردشة">
-              {([["all", "الكل"], ["chat", "الدردشة"], ["gifts", "هدية"]] as const).map(([key, label]) => (
+              {([["all", "الكل"], ["chat", "الدردشة"]] as const).map(([key, label]) => (
                 <button key={key} type="button" onClick={() => setTab(key)} aria-pressed={tab === key}
                   className={`relative pb-2 text-base font-bold transition ${tab === key ? "" : "opacity-50"}`}>
                   {label}
@@ -485,30 +469,6 @@ function RoomPage() {
             </nav>
 
             <div className="min-h-0 flex-1 space-y-2 overflow-y-auto px-4 py-2">
-              {tab === "gifts" ? (
-                <div className="rounded-2xl bg-overlay p-3">
-                  <p className="flex items-center gap-1.5 text-sm font-bold">
-                    <img src={coinIcon} alt="" className="size-4" /> ارمِ كوينز في الروم
-                  </p>
-                  <p className="mt-1 text-xs opacity-70">
-                    رصيدك <bdi dir="ltr">{balance.toLocaleString("en")}</bdi> · المتجمع في الروم <bdi dir="ltr">{coins.toLocaleString("en")}</bdi>
-                  </p>
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {COIN_AMOUNTS.map((a) => (
-                      <button key={a} type="button" onClick={() => setAmount(a)} aria-pressed={amount === a}
-                        className={`rounded-full px-3 py-1 text-sm font-bold tabular-nums transition ${amount === a ? "bg-rank-gold text-background" : "bg-background/15 opacity-70"}`}>
-                        {a}
-                      </button>
-                    ))}
-                  </div>
-                  <Button type="button" onClick={onThrow} disabled={throwing || balance < amount} className="mt-3 w-full rounded-full">
-                    {throwing ? <Loader2 className="animate-spin" /> : <img src={coinIcon} alt="" className="size-4" />}
-                    ارمِ {amount} كوينز
-                  </Button>
-                  {balance < amount && <p className="mt-1 text-center text-xs text-destructive">رصيدك من الكوينز مش كفاية</p>}
-                </div>
-              ) : (
-                <>
                   {tab === "all" && (
                     <>
                       <Card><p className="text-sm text-primary">مرحبًا بك في voli، يرجى الالتزام بمواصفات المنصة.</p></Card>
@@ -553,8 +513,6 @@ function RoomPage() {
                   })}
                   {tab === "chat" && messages.length === 0 && <p className="py-10 text-center text-sm opacity-70">مفيش رسايل لسه</p>}
                   <div ref={endRef} />
-                </>
-              )}
             </div>
 
             <form onSubmit={onSend} className="flex items-center gap-2 px-4 pb-4 pt-2">
