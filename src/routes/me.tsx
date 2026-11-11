@@ -111,7 +111,7 @@ function MePage() {
   const navigate = useNavigate();
   const thresholds = useThresholds();
   const myId = session?.user.id;
-  const frame = useWorn([myId])[myId ?? ""]?.headwear?.art_url;
+  const frame = useWorn([myId])[myId ?? ""]?.frame?.art_url;
   return (
     <AppScreen background={meBackground}>
         {/* ── الغلاف ── */}
