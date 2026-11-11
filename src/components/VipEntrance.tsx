@@ -2,7 +2,8 @@ import { vipEntranceArt } from "@/lib/vip-art";
 import { vipTier } from "@/lib/vip";
 
 /** Room entrance bar: the tier's picture flies in with the member's name on its plate. */
-export function VipEntrance({ level, name, play = true, className = "" }: { level: number; name: string; play?: boolean; className?: string }) {
+/** `once` plays the fly-in a single time and stays hidden at the end (rooms); otherwise it loops (previews). */
+export function VipEntrance({ level, name, play = true, once = false, className = "" }: { level: number; name: string; play?: boolean; once?: boolean; className?: string }) {
   const tier = vipTier(level);
   const art = vipEntranceArt(level);
   if (!tier || !art) return null;
@@ -12,7 +13,7 @@ export function VipEntrance({ level, name, play = true, className = "" }: { leve
     <div
       role="img"
       aria-label={`دخولية ${tier.nameAr}: ${name}`}
-      className={`relative w-full select-none ${play ? "animate-vip-entrance" : ""} ${className}`}
+      className={`relative w-full select-none ${play ? (once ? "animate-vip-entrance-once" : "animate-vip-entrance") : ""} ${className}`}
       style={{ containerType: "inline-size" }}
     >
       <img src={art.url} alt="" draggable={false} className={`block h-auto w-full ${play ? "animate-vip-glow" : ""}`} />

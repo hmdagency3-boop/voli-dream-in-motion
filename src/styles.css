@@ -211,6 +211,7 @@
 @utility animate-live { animation: live-pulse 1.4s ease-in-out infinite; }
 @keyframes vip-entrance { 0% { transform: translateX(110%); opacity: 0; } 14% { opacity: 1; } 22%,78% { transform: translateX(0); opacity: 1; } 100% { transform: translateX(-110%); opacity: 0; } }
 @utility animate-vip-entrance { animation: vip-entrance 4.5s cubic-bezier(.2,.8,.3,1) infinite; @media (prefers-reduced-motion: reduce) { animation: none; } }
+@utility animate-vip-entrance-once { animation: vip-entrance 4.5s cubic-bezier(.2,.8,.3,1) 1 both; will-change: transform, opacity; @media (prefers-reduced-motion: reduce) { animation: none; } }
 
 @keyframes vip-shine { 0%,20% { background-position: 150% 0; } 60%,100% { background-position: -50% 0; } }
 @utility animate-vip-shine {

@@ -1,1 +1,2 @@
 - Country flags are flag-icons' 1x1 SVGs bundled via import.meta.glob in profile-info.ts (emoji only as fallback), so they render round everywhere without a CDN.
+- Room arrivals come from freshArrivals (room-arrivals.ts) with a re-announce gap, and the room page never overlaps refreshes or cuts off a playing ride/entrance bar, because heartbeat presence flickers and interrupted entrances replayed.

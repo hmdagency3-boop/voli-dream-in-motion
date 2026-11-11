@@ -22,6 +22,7 @@ import { VipBadge } from "@/components/VipBadge";
 import { VipEntrance } from "@/components/VipEntrance";
 import { HeadwearFrame } from "@/components/HeadwearFrame";
 import { RideEntrance } from "@/components/RideEntrance";
+import { freshArrivals } from "@/lib/room-arrivals";
 import { getWorn, useWorn, type WornItem } from "@/lib/store";
 import { useAccount } from "@/hooks/use-account";
 import { useRoomVoice } from "@/hooks/use-room-voice";
@@ -82,7 +83,7 @@ function RoomPage() {
   const [joins, setJoins] = useState<Join[]>([]);
   const [entrances, setEntrances] = useState<Join[]>([]);
   /** Store rides of members who just came in, shown one after another. */
-  const [rides, setRides] = useState<{ key: string; name: string; ride: WornItem }[]>([]);
+  const [rides, setRides] = useState<{ key: string; auth_id: string; name: string; ride: WornItem }[]>([]);
   const [listOpen, setListOpen] = useState(false);
   const [rankOpen, setRankOpen] = useState(false);
   const [gamesOpen, setGamesOpen] = useState(false);
@@ -101,7 +102,10 @@ function RoomPage() {
   const endRef = useRef<HTMLDivElement>(null);
   const peopleRef = useRef(people);
   peopleRef.current = people;
-  const seenRef = useRef<Set<string> | null>(null);
+  /** Member id -> last time they were in the room list; decides who really just came in. */
+  const presentRef = useRef<Map<string, number> | null>(null);
+  /** The ride on screen right now; a gift video waits for it instead of cutting it off. */
+  const [rideOn, setRideOn] = useState<string | null>(null);
 
   const isOwner = !!me && owner?.auth_id === me;
   const iAmSeated = !!me && seats.some((s) => s.auth_id === me);
@@ -160,7 +164,15 @@ function RoomPage() {
   useEffect(() => {
     if (!inside || !roomId) return;
     let active = true;
+    let busy = false;
+    presentRef.current = null;
     const load = async () => {
+      // A slow refresh must never overlap the next one: answers arriving out of order made members look new again.
+      if (busy) return;
+      busy = true;
+      try { await refresh(); } finally { busy = false; }
+    };
+    const refresh = async () => {
       const [s, got, t] = await Promise.all([getRoomState(roomId).catch(() => null), getGiftsReceived(roomId), getRoomTools(roomId).catch(() => null)]);
       if (!active || !s) return;
       if (t) { setTools(t); setToolsReady(true); }
@@ -183,18 +195,19 @@ function RoomPage() {
         }
       }
       // Announce members who just came in (the first load only remembers who is already here).
-      const seen = seenRef.current;
-      seenRef.current = new Set(s.members);
-      if (seen) {
+      const first = !presentRef.current;
+      if (!presentRef.current) presentRef.current = new Map();
+      const arrived = freshArrivals(presentRef.current, s.members, me, Date.now(), first);
+      {
         const now = new Date().toISOString();
-        const fresh = s.members.filter((id) => !seen.has(id) && id !== me).map((id) => ({ key: `${id}-${now}`, auth_id: id, at: now }));
+        const fresh = arrived.map((id) => ({ key: `${id}-${now}`, auth_id: id, at: now }));
         if (fresh.length) {
           setJoins((j) => [...j, ...fresh].slice(-50));
-          setEntrances((q) => [...q, ...fresh.filter((x) => activeVipLevel(peopleRef.current[x.auth_id]) > 0)]);
+          setEntrances((q) => [...q, ...fresh.filter((x) => activeVipLevel(peopleRef.current[x.auth_id]) > 0 && !q.some((y) => y.auth_id === x.auth_id))]);
           void getWorn(fresh.map((x) => x.auth_id)).then((w) => {
             if (!active) return;
-            const add = fresh.flatMap((x) => { const ride = w[x.auth_id]?.ride; return ride ? [{ key: x.key, name: peopleRef.current[x.auth_id]?.display_name ?? "", ride }] : []; });
-            if (add.length) setRides((q) => [...q, ...add].slice(-10));
+            const add = fresh.flatMap((x) => { const ride = w[x.auth_id]?.ride; return ride ? [{ key: x.key, auth_id: x.auth_id, name: peopleRef.current[x.auth_id]?.display_name ?? "", ride }] : []; });
+            if (add.length) setRides((q) => { const next = [...q, ...add.filter((x) => !q.some((y) => y.auth_id === x.auth_id))]; return next.length > 10 ? [next[0]!, ...next.slice(-9)] : next; });
           });
         }
       }
@@ -248,18 +261,24 @@ function RoomPage() {
     setEntrance(false);
     const j = { key: `${me}-${Date.now()}`, auth_id: me, at: new Date().toISOString() };
     setJoins((x) => [...x, j]);
-    if (activeVipLevel(profile) > 0) setEntrances((q) => [j, ...q]);
+    // Added at the end of the line, so an entrance already playing is never cut off and replayed.
+    if (activeVipLevel(profile) > 0) setEntrances((q) => (q.some((y) => y.auth_id === me) ? q : [...q, j]));
     const myName = profile?.display_name ?? "";
-    void getWorn([me]).then((w) => { const ride = w[me]?.ride; if (ride) setRides((q) => [{ key: j.key, name: myName, ride }, ...q]); });
+    void getWorn([me]).then((w) => { const ride = w[me]?.ride; if (ride) setRides((q) => (q.some((y) => y.auth_id === me) ? q : [...q, { key: j.key, auth_id: me, name: myName, ride }])); });
   }, [entrance, me, profile]);
   const shownRide = rides[0];
+  // A ride starts only when no gift video is playing, then plays to its end (never unmounted and restarted).
+  useEffect(() => {
+    if (rideOn && !rides.some((x) => x.key === rideOn)) { setRideOn(null); return; }
+    if (!rideOn && shownRide && !videoQueue[0]) setRideOn(shownRide.key);
+  }, [rideOn, rides, shownRide, videoQueue]);
   // Frames worn by the people on the mics.
   const worn = useWorn(seats.map((x) => x.auth_id));
   // Entrance bars play one after another.
   const shownEntrance = entrances[0];
   useEffect(() => {
     if (!shownEntrance) return;
-    const t = setTimeout(() => setEntrances((q) => q.slice(1)), 4500);
+    const t = setTimeout(() => setEntrances((q) => q.filter((x) => x.key !== shownEntrance.key)), 4600);
     return () => clearTimeout(t);
   }, [shownEntrance]);
   useEffect(() => { endRef.current?.scrollIntoView({ block: "end" }); }, [messages.length, joins.length, tab]);
@@ -559,22 +578,22 @@ function RoomPage() {
               </div>
             )}
 
-            {shownVideo && (
+            {shownVideo && !rideOn && (
               <GiftVideo key={shownVideo.id} show={shownVideo}
                 sender={shownVideo.sender_id ? (shownVideo.sender_id === me ? profile?.display_name : people[shownVideo.sender_id]?.display_name) ?? undefined : undefined}
                 onDone={() => setVideoQueue((q) => q.filter((x) => x.id !== shownVideo.id))} />
             )}
 
-            {shownRide && !shownVideo && (
+            {shownRide && rideOn === shownRide.key && (
               <RideEntrance key={shownRide.key} ride={shownRide.ride} name={shownRide.name}
-                onDone={() => setRides((q) => q.filter((x) => x.key !== shownRide.key))} />
+                onDone={() => { setRides((q) => q.filter((x) => x.key !== shownRide.key)); setRideOn(null); }} />
             )}
 
             {shownEntrance && (() => {
               const ep = shownEntrance.auth_id === me && profile ? { ...profile, vip: myVip } : people[shownEntrance.auth_id] && { ...people[shownEntrance.auth_id], vip: activeVipLevel(people[shownEntrance.auth_id]) };
               return ep && ep.vip > 0 ? (
                 <div key={shownEntrance.key} className="pointer-events-none absolute inset-x-0 top-1/3 px-3">
-                  <VipEntrance level={ep.vip} name={ep.display_name ?? ""} />
+                  <VipEntrance level={ep.vip} name={ep.display_name ?? ""} once />
                 </div>
               ) : null;
             })()}
