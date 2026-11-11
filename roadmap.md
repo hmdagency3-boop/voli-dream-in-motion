@@ -148,3 +148,4 @@
 - [ ] Management panel (branch لوحة-الادارة): store page to add/edit/hide/delete items, upload pictures and videos, give an item to a member.
 - [ ] Push app to main and panel to لوحة-الادارة on GitHub.
 - [ ] Run supabase/023_store.sql in the SQL Editor (needs the user).
+- [ ] Match the app's store and backpack to the panel's own sql/023_store.sql (frame/ride kinds, style, days, UUID ids, store_buy / store_equip).
